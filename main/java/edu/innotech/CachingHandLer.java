@@ -2,25 +2,22 @@ package edu.innotech;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 class CachingHandLer implements InvocationHandler {
 
 
     private Object objectIncome;
 
-    private Boolean isCached ;
+    private Map<Method, Object> cacheObj = new HashMap<>();
 
-    private Object resCache;
-
-    public static Boolean isCachedForTest;
 
 
 
     public CachingHandLer(Object objectIncome) {
 
         this.objectIncome = objectIncome;
-        this.isCached = false;
-        isCachedForTest = false;
     }
 
     @Override
@@ -32,24 +29,19 @@ class CachingHandLer implements InvocationHandler {
 
 
         if (methodClass.isAnnotationPresent(Mutator.class)){
-            this.isCached = false;
-            isCachedForTest =  this.isCached;
+            cacheObj.clear();
         }
 
         if (methodClass.isAnnotationPresent(Cache.class)){
-            if (this.isCached){
-                return resCache;
+            if (cacheObj.containsKey(methodClass)){
+                return cacheObj.get(methodClass);
             }
         }
 
 
         Object res = method.invoke(this.objectIncome, args);
         if (methodClass.isAnnotationPresent(Cache.class)){
-            if (!this.isCached){
-                this.isCached = true;
-                isCachedForTest =  this.isCached;
-                resCache = res;
-            }
+            cacheObj.put(methodClass,res);
         }
         return res;
     }

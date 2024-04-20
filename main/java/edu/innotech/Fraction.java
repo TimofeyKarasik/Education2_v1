@@ -24,7 +24,14 @@ public class Fraction implements Fractionable{
     @Override
     @Cache
     public double doubleValue(){
-        System.out.println("Work");
         return (double) num/denum;
     }
+
+    @Override
+    @Cache
+    public String toString(){
+        return "Fraction{" + "num = " + num + ", denum = " + denum + "}";
+    }
+
+
 }

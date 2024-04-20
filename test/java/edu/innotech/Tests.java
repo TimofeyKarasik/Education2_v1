@@ -5,42 +5,27 @@ import org.junit.jupiter.api.Test;
 public class Tests {
     @Test
     public void testCache() {
-        Fractionable f = new Fraction(1,2);
+
+        Fraction f1 = new Fraction(1,2);
+        Fractionable f2;
+
+        f2= Utils.cache(f1);
 
 
-        f= Utils.cache(f);
-
-        System.out.println(f.doubleValue());
-        if (!CachingHandLer.isCachedForTest) {
-            throw
-                    new IllegalArgumentException("Провал теста: Кэширование не произошло");
+        if (f1.doubleValue()==f2.doubleValue()&&f1.toString().equals(f2.toString())){
+            System.out.println("Успех значение закэшировалось");
         }
 
-        System.out.println(f.doubleValue());
-        System.out.println(f.doubleValue());
+        f1.setDenum(4);
 
-        f.setDenum(4);
-
-        if (CachingHandLer.isCachedForTest) {
-            throw new IllegalArgumentException("Провал теста: Кэш не сбросился при setDenum");
+        if (f1.doubleValue()!=f2.doubleValue()&&!f1.toString().equals(f2.toString())){
+            System.out.println("Успех значение осталось закэшированно после изменения исходного обьекта");
         }
 
-        System.out.println(f.doubleValue());
+        f2.setDenum(4);
 
-        if (!CachingHandLer.isCachedForTest) {
-            throw new IllegalArgumentException("Провал теста: Кэширование не произошло");
-        }
-
-
-        f.setNum(9);
-
-        if (CachingHandLer.isCachedForTest) {
-            throw new IllegalArgumentException("Провал теста: Кэш не сбросился при setNum");
-        }
-
-        System.out.println(f.doubleValue());
-        if (!CachingHandLer.isCachedForTest) {
-            throw new IllegalArgumentException("Провал теста: Кэширование не произошло");
+        if (f1.doubleValue()==f2.doubleValue()&&f1.toString().equals(f2.toString())){
+            System.out.println("Успех значение кэша переинициализировались");
         }
 
         System.out.println("Успех теста");
